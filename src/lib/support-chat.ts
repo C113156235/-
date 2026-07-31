@@ -40,7 +40,6 @@ function readThreads(): SupportThread[] {
 function writeThreads(threads: SupportThread[]) {
   if (!isBrowser()) return;
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
-  window.dispatchEvent(new Event("tsm-support-chat-updated"));
 }
 
 function mkId(prefix: string) {

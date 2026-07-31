@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { SiteShell, PageHeader } from "@/components/site-shell";
 import { CheckoutModal } from "@/components/CheckoutModal";
@@ -155,7 +155,10 @@ function CampaignCard({ c, onAddToCart }: { c: Campaign; onAddToCart: (campaign:
   const tempLabel = c.tempType === "cold" ? (locale === "zh" ? "冷鏈" : "Cold chain") : locale === "zh" ? "常溫" : "Ambient";
 
   return (
-    <article className="flex flex-col gap-4 rounded-md border border-border bg-white p-4 shadow-sm">
+    <article 
+  id={c.name.en.includes("Eggs") ? "product-eggs" : `product-${c.name.en.toLowerCase().replace(/\s+/g, '-')}`}
+  className="flex flex-col gap-4 rounded-md border border-border bg-white p-4 shadow-sm transition-all duration-500"
+>
       <div className="relative overflow-hidden rounded">
         <img src={c.img} alt={c.name[locale]} className="aspect-[4/3] w-full object-cover" />
         {c.hot && (
@@ -495,6 +498,29 @@ function CoopPage() {
   const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [walletBalance, setWalletBalance] = useState(1280);
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+    if (hash) {
+      const timer = setTimeout(() => {
+        const targetElement = document.getElementById(hash);
+        if (targetElement) {
+          // 1. 自動平滑捲動至畫面中央
+          targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          // 2. 加上綠色高亮與脈衝閃爍動畫
+          targetElement.classList.add("ring-4", "ring-primary", "animate-pulse");
+
+          // 3. 2.5 秒後自動停止閃爍並恢復原狀
+          setTimeout(() => {
+            targetElement.classList.remove("ring-4", "ring-primary", "animate-pulse");
+          }, 2500);
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
 
   function addToCart(campaign: Campaign) {
     setCart((prev) => [
