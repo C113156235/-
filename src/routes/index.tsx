@@ -300,7 +300,7 @@ function Surplus() {
               </div>
             </div>
             <Link
-              to="/onboarding"
+              to="/calculator"
               className="inline-flex items-center gap-2 rounded-full bg-primary-glow px-4 py-2 text-sm font-semibold text-foreground shadow-glow transition-all hover:brightness-110"
             >
               {t("calc.cta")} <ArrowRight className="size-4" />
