@@ -411,12 +411,12 @@ type CartItem = { id: string; name: string; price: number; tempType: TempType };
 function CartCheckoutPanel({
   cart,
   checkoutMessage,
-  onCheckout,
+  onOpenCheckout,
   onClear,
 }: {
   cart: CartItem[];
   checkoutMessage: string | null;
-  onCheckout: () => void;
+  onOpenCheckout: () => void;
   onClear: () => void;
 }) {
   const { locale } = useI18n();
@@ -475,11 +475,11 @@ function CartCheckoutPanel({
 
       <div className="mt-5 flex flex-wrap gap-3">
         <button
-          onClick={onCheckout}
+          onClick={onOpenCheckout}
           disabled={cart.length === 0}
-          className="rounded-sm bg-primary px-4 py-2 text-sm font-bold text-primary-foreground disabled:opacity-40"
+          className="rounded-sm bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow hover:brightness-110 disabled:opacity-40"
         >
-          {locale === "zh" ? "提交結帳" : "Submit checkout"}
+          {locale === "zh" ? "前往結帳" : "Proceed to Checkout"}
         </button>
         <button
           onClick={onClear}
@@ -535,20 +535,6 @@ function CoopPage() {
     setCheckoutMessage(null);
   }
 
-  function handleCheckout() {
-    if (cart.length === 0) return;
-    const mixed = cart.some((item) => item.tempType === "cold") && cart.some((item) => item.tempType === "ambient");
-    setCheckoutMessage(
-      mixed
-        ? locale === "zh"
-          ? "已建立混溫配送提醒，將分別安排行程。"
-          : "Mixed-temperature checkout logged. Pickup will be split into separate lanes."
-        : locale === "zh"
-          ? "結帳成立，冷鏈商品將由合作社協助安排。"
-          : "Checkout confirmed. Cold-chain items will be routed through the co-op handling team.",
-    );
-  }
-
   return (
     <SiteShell>
       <PageHeader
@@ -573,7 +559,6 @@ function CoopPage() {
       <CartCheckoutPanel
         cart={cart}
         checkoutMessage={checkoutMessage}
-        onCheckout={handleCheckout}
         onOpenCheckout={() => setCheckoutOpen(true)}
         onClear={() => {
           setCart([]);
